@@ -3,9 +3,7 @@ package victor.pacheco.queuemanager;
 public class Queue {
 
     private String queue_name;
-    private Integer slot_time;
-    private Integer hour;
-    private Integer min;
+    private Integer slot_time, hour, min;
 
     public Queue(String queue_name, Integer slot_time, Integer hour, Integer min) {
         this.queue_name = queue_name;
