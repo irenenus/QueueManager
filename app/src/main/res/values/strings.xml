@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">QueueManager</string>
+    <string name="title_activity_create_queue">CreateQueueActivity</string>
+</resources>
