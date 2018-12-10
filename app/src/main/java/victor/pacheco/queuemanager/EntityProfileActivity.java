@@ -1,7 +1,6 @@
 package victor.pacheco.queuemanager;
 
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,19 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +24,12 @@ import java.util.Map;
 public class EntityProfileActivity extends AppCompatActivity {
 
     //Modelo
-    List<Queue> queue_list;
-    List<Queue> queue_list2;
-    Map<String, List> queueMap;
+    List<Queue> queue_set_list;
+    List<Queue> support_queue_list;
+    List<String> users_list;
+    Map<String, List> queue_map;
+    Map <String, List> users_list_map;
+
 
     // Referencias a objetos de la pantalla
     private RecyclerView entity_queue_recycler;
@@ -47,34 +43,19 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    public EntityProfileActivity() {
-    }
+    private DocumentReference setRef = db.collection("Queues").document("Queues settings");
+    private DocumentReference usrListRef = db.collection("Queues").document("Users lists");
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entity_queue);
+        setContentView(R.layout.activity_entity_profile);
 
-        queue_list = new ArrayList<>();
-
-        /*
-        user_list = new ArrayList<>();
-        user_list.add(new User("Segismundo", 15));
-        user_list.add(new User("Anacleto",30));
-        user_list.add(new User("Austringiliano",45));
-        user_list.add(new User("Beraquisio",60));
-        user_list.add(new User("Onésimo",75));
-        user_list.add(new User("Eufrasio",90));
-        user_list.add(new User("Visitación",105));
-        user_list.add(new User("Wilfredo",130));
-        user_list.add(new User("Ataulfo",145));
-        user_list.add(new User("Orencia",160));
-        user_list.add(new User("Tenebrina",175));
-        user_list.add(new User("Etelvina",190));
-        user_list.add(new User("Gertrudis",205)); */
-
+        queue_set_list = new ArrayList<>();
+        users_list = new ArrayList<>();
+        queue_map = new HashMap<>();
+        users_list_map = new HashMap<>();
 
 
         entity_queue_recycler = findViewById(R.id.entity_queue_recycler);
@@ -83,6 +64,12 @@ public class EntityProfileActivity extends AppCompatActivity {
         entity_queue_recycler.setAdapter(adapter);
 
         btn_new_queue = findViewById(R.id.btn_create_queue);
+        readProfileData();
+
+    }
+
+    public void readProfileData(){
+
 
     }
 
@@ -109,18 +96,24 @@ public class EntityProfileActivity extends AppCompatActivity {
                     slot_time = data.getIntExtra("slot",-1);
                     closing_hour = data.getIntExtra("close_h",-1);
                     closing_min = data.getIntExtra("close_m",-1);
-                    queue_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
-                    int pos = queue_list.size();
+                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
+                    int pos = queue_set_list.size();
+
+                    // Notificamos cambios en el Recycler
                     adapter.notifyItemInserted(pos - 1);
 
-                    queueMap = new HashMap<>();
+
                     // Creamos una nueva lista para que no nos añada la información de todas las listas y se cree redundancia
-                    queue_list2 = new ArrayList<>();
-                    queue_list2.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
+                    support_queue_list = new ArrayList<>();
+                    support_queue_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
 
-
-                    queueMap.put(queue_name, queue_list2);
-                    db.collection("cues").document(queue_name).set(queueMap);
+                    // Añadimos dos entradas a FireStore.
+                    // 1. Un un campo con un Map cuyo key es el nombre de la lista al que se asocia un array vacio de Strings (será la lista de usuarios de esta cola)
+                    // 2. Un campo con un Map cuyo key es el nombre de la lista, al que se asocia un array con los settings de la lista.
+                    queue_map.put(queue_name, support_queue_list);
+                    users_list_map.put(queue_name, users_list);
+                    setRef.set(queue_map);
+                    usrListRef.set(users_list_map);
                 }
                 break;
             default:
@@ -128,6 +121,7 @@ public class EntityProfileActivity extends AppCompatActivity {
         }
 
     }
+
 
 
     // El ViewHolder mantiene referencias a las partes del itemView que cambian cuando la reciclamos. Es una inner class de la clase ShoppingListActivity
@@ -139,6 +133,15 @@ public class EntityProfileActivity extends AppCompatActivity {
             super(itemView);
             // Obtenemos las referencias a objetos dentro del itemView
             queue_name_view =itemView.findViewById((R.id.queue_name_view));
+            queue_name_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), EntityQueueActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+
         }
     }
 
@@ -157,16 +160,15 @@ public class EntityProfileActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             // Vamos al modelo y obtenemos el valor en la posicion que nos pasan
-            Queue queue_item  = queue_list.get(position);
+            Queue queue_item  = queue_set_list.get(position);
             // Reciclamos el itemView
             holder.queue_name_view.setText(queue_item.getQueue_name());
-            //holder.user_view.setText((user_item.getWaiting_time()));
         }
 
         @Override
         //Puedo acceder al item (que es un campo de la actividad) pq el Adapter es una clase interna de la actividad.
         public int getItemCount() {
-            return queue_list.size();
+            return queue_set_list.size();
         }
     }
 

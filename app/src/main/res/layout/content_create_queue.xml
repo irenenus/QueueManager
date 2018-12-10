@@ -90,9 +90,9 @@
         android:id="@+id/btn_create_queue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:layout_marginEnd="24dp"
-        android:text="Button"
+        android:layout_marginBottom="24dp"
+        android:text="CREATE QUEUE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
