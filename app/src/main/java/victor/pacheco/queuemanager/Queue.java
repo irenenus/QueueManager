@@ -5,6 +5,8 @@ public class Queue {
     private String queue_name;
     private Integer slot_time, hour, min;
 
+    Queue() {}
+
     public Queue(String queue_name, Integer slot_time, Integer hour, Integer min) {
         this.queue_name = queue_name;
         this.slot_time = slot_time;

@@ -14,12 +14,17 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class EntityProfileActivity extends AppCompatActivity {
 
@@ -27,8 +32,6 @@ public class EntityProfileActivity extends AppCompatActivity {
     List<Queue> queue_set_list;
     List<Queue> support_queue_list;
     List<String> users_list;
-    Map<String, List> queue_map;
-    Map <String, List> users_list_map;
 
 
     // Referencias a objetos de la pantalla
@@ -43,9 +46,6 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference setRef = db.collection("Queues").document("Queues settings");
-    private DocumentReference usrListRef = db.collection("Queues").document("Users lists");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +54,13 @@ public class EntityProfileActivity extends AppCompatActivity {
 
         queue_set_list = new ArrayList<>();
         users_list = new ArrayList<>();
-        queue_map = new HashMap<>();
-        users_list_map = new HashMap<>();
 
+
+       // db.collection("users").add(new User()) //para añadir usuarios dentro de la subcoleccion
+
+
+
+        // db.collection("Queues").document(queueId).collection("users").addSnapsh
 
         entity_queue_recycler = findViewById(R.id.entity_queue_recycler);
         entity_queue_recycler.setLayoutManager(new LinearLayoutManager(this));
@@ -69,7 +73,18 @@ public class EntityProfileActivity extends AppCompatActivity {
     }
 
     public void readProfileData(){
-
+        db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
+            // la lista que tenemos en firebase
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                queue_set_list.clear(); //borra la lista
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {  //la rellena de nuevo la lista
+                    Queue q = doc.toObject(Queue.class);
+                    queue_set_list.add(q);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -103,17 +118,9 @@ public class EntityProfileActivity extends AppCompatActivity {
                     adapter.notifyItemInserted(pos - 1);
 
 
-                    // Creamos una nueva lista para que no nos añada la información de todas las listas y se cree redundancia
-                    support_queue_list = new ArrayList<>();
-                    support_queue_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
+                    // Añadimos la nueva cola a Firebase
 
-                    // Añadimos dos entradas a FireStore.
-                    // 1. Un un campo con un Map cuyo key es el nombre de la lista al que se asocia un array vacio de Strings (será la lista de usuarios de esta cola)
-                    // 2. Un campo con un Map cuyo key es el nombre de la lista, al que se asocia un array con los settings de la lista.
-                    queue_map.put(queue_name, support_queue_list);
-                    users_list_map.put(queue_name, users_list);
-                    setRef.set(queue_map);
-                    usrListRef.set(users_list_map);
+                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min));
                 }
                 break;
             default:
