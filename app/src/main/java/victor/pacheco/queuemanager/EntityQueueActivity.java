@@ -14,10 +14,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class EntityQueueActivity extends AppCompatActivity {
 
@@ -28,7 +34,7 @@ public class EntityQueueActivity extends AppCompatActivity {
     private RecyclerView entity_userlist_recycler;
     private EntityQueueActivity.Adapter adapter;
     private Button btn_next;
-    List<String> users_list;
+    List<User> users_list;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private DocumentReference usrListRef = db.collection("Queues").document("User lists");
@@ -54,11 +60,26 @@ public class EntityQueueActivity extends AppCompatActivity {
         Glide.with(this).load("file:///android_asset/user-size-list.png").into(list_size_icon);
 
         users_list = new ArrayList<>();
+        readProfileData();
 
-        users_list.add("Segismundo");
-        users_list.add("Pancracio");
-        users_list.add("Anacleto");
-        users_list.add("Nefertina");
+    }
+
+    public void readProfileData(){
+
+        // db.collection("Queues").document(queueId).collection("users").addSnapsh
+
+        db.collection("Queues").document("ywHGVsYq5QQ1RTr7pHVd").collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
+            // la lista que tenemos en firebase
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                users_list.clear(); //borra la lista
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {  //la rellena de nuevo la lista
+                    User u = doc.toObject(User.class);
+                    users_list.add(u);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -84,9 +105,9 @@ public class EntityQueueActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             // Vamos al modelo y obtenemos el valor en la posicion que nos pasan
-            String user_item  = users_list.get(position);
+            User user_item  = users_list.get(position);
             // Reciclamos el itemView
-            holder.queue_name_view.setText(user_item);
+            holder.queue_name_view.setText(user_item.getUsr_id());
         }
 
         @Override

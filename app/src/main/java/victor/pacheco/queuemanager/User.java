@@ -3,10 +3,14 @@ package victor.pacheco.queuemanager;
 public class User {
     private String usr_id;
     private int waiting_time;
+    private boolean state;
 
+    User(){}
     public User(String usr_id, int waiting_time) {
         this.usr_id = usr_id;
         this.waiting_time = waiting_time;
+        this.state = state;
+
     }
 
     public int getWaiting_time() {
@@ -23,6 +27,14 @@ public class User {
 
     public void setUsr_id(String usr_id) {
         this.usr_id = usr_id;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    public boolean isState() {
+        return state;
     }
 
 }

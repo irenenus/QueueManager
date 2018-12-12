@@ -56,10 +56,6 @@ public class EntityProfileActivity extends AppCompatActivity {
         users_list = new ArrayList<>();
 
 
-       // db.collection("users").add(new User()) //para añadir usuarios dentro de la subcoleccion
-
-
-
         // db.collection("Queues").document(queueId).collection("users").addSnapsh
 
         entity_queue_recycler = findViewById(R.id.entity_queue_recycler);
