@@ -74,8 +74,9 @@ public class EntityProfileActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 queue_set_list.clear(); //borra la lista
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {  //la rellena de nuevo la lista
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Queue q = doc.toObject(Queue.class);
+                    q.setId(doc.getId());
                     queue_set_list.add(q);
                 }
                 adapter.notifyDataSetChanged();
@@ -139,7 +140,10 @@ public class EntityProfileActivity extends AppCompatActivity {
             queue_name_view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    String queueId = queue_set_list.get(pos).getId();
                     Intent intent = new Intent(getApplicationContext(), EntityQueueActivity.class);
+                    intent.putExtra("queueId", queueId);
                     startActivity(intent);
                 }
             });

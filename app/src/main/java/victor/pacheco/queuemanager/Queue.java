@@ -1,7 +1,7 @@
 package victor.pacheco.queuemanager;
 
 public class Queue {
-
+    private String id;
     private String queue_name;
     private Integer slot_time, hour, min;
 
@@ -12,6 +12,14 @@ public class Queue {
         this.slot_time = slot_time;
         this.hour = hour;
         this.min = min;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getQueue_name() {

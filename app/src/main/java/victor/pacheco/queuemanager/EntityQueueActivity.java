@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 public class EntityQueueActivity extends AppCompatActivity {
 
+    private String queueId;
     private ImageView wt_icon;
     private ImageView list_size_icon;
     private TextView timming_view;
@@ -54,7 +55,7 @@ public class EntityQueueActivity extends AppCompatActivity {
         adapter = new Adapter();
         entity_userlist_recycler.setAdapter(adapter);
 
-
+        queueId = getIntent().getStringExtra("queueId");
 
         Glide.with(this).load("file:///android_asset/wait-time-icon.png").into(wt_icon);
         Glide.with(this).load("file:///android_asset/user-size-list.png").into(list_size_icon);
@@ -68,7 +69,7 @@ public class EntityQueueActivity extends AppCompatActivity {
 
         // db.collection("Queues").document(queueId).collection("users").addSnapsh
 
-        db.collection("Queues").document("ywHGVsYq5QQ1RTr7pHVd").collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
+        db.collection("Queues").document(queueId).collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
             // la lista que tenemos en firebase
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
