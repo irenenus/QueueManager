@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,7 +41,6 @@ public class EntityQueueActivity extends AppCompatActivity {
     List<User> users_list;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference usrListRef = db.collection("Queues").document("User lists");
 
 
     @Override
@@ -63,11 +65,15 @@ public class EntityQueueActivity extends AppCompatActivity {
         users_list = new ArrayList<>();
         readProfileData();
 
+
+        //añado en el firebase el numero de usuarios que tiene cada cola
+        db.collection("Queues").document(queueId).update("numuser",users_list.size());
+        queue_size_view.setText(users_list.size());
+
     }
 
     public void readProfileData(){
 
-        // db.collection("Queues").document(queueId).collection("users").addSnapsh
 
         db.collection("Queues").document(queueId).collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
             // la lista que tenemos en firebase

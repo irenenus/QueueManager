@@ -108,7 +108,7 @@ public class EntityProfileActivity extends AppCompatActivity {
                     slot_time = data.getIntExtra("slot",-1);
                     closing_hour = data.getIntExtra("close_h",-1);
                     closing_min = data.getIntExtra("close_m",-1);
-                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min) );
+                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0) );
                     int pos = queue_set_list.size();
 
                     // Notificamos cambios en el Recycler
@@ -117,7 +117,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
                     // Añadimos la nueva cola a Firebase
 
-                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min));
+                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min,0));
                 }
                 break;
             default:

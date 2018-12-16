@@ -3,15 +3,16 @@ package victor.pacheco.queuemanager;
 public class Queue {
     private String id;
     private String queue_name;
-    private Integer slot_time, hour, min;
+    private Integer slot_time, hour, min, numuser;
 
     Queue() {}
 
-    public Queue(String queue_name, Integer slot_time, Integer hour, Integer min) {
+    public Queue(String queue_name, Integer slot_time, Integer hour, Integer min, Integer numuser) {
         this.queue_name = queue_name;
         this.slot_time = slot_time;
         this.hour = hour;
         this.min = min;
+        this.numuser = numuser;
     }
 
     public String getId() {
@@ -52,6 +53,14 @@ public class Queue {
 
     public void setMin(Integer min) {
         this.min = min;
+    }
+
+    public Integer getNumuser() {
+        return numuser;
+    }
+
+    public void setNumuser(Integer numuser) {
+        this.numuser = numuser;
     }
 
 }
