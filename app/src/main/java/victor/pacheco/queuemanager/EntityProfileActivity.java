@@ -33,7 +33,6 @@ public class EntityProfileActivity extends AppCompatActivity {
     List<Queue> support_queue_list;
     List<String> users_list;
 
-
     // Referencias a objetos de la pantalla
     private RecyclerView entity_queue_recycler;
     private Adapter adapter;
@@ -42,6 +41,7 @@ public class EntityProfileActivity extends AppCompatActivity {
     private Integer slot_time;
     private Integer closing_hour;
     private Integer closing_min;
+    private String current_user;
 
 
     // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
@@ -108,7 +108,8 @@ public class EntityProfileActivity extends AppCompatActivity {
                     slot_time = data.getIntExtra("slot",-1);
                     closing_hour = data.getIntExtra("close_h",-1);
                     closing_min = data.getIntExtra("close_m",-1);
-                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0) );
+                    current_user ="";
+                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0, current_user ) );
                     int pos = queue_set_list.size();
 
                     // Notificamos cambios en el Recycler
@@ -117,7 +118,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
                     // Añadimos la nueva cola a Firebase
 
-                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min,0));
+                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user));
                 }
                 break;
             default:

@@ -64,16 +64,9 @@ public class EntityQueueActivity extends AppCompatActivity {
 
         users_list = new ArrayList<>();
         readProfileData();
-
-
-        //añado en el firebase el numero de usuarios que tiene cada cola
-        db.collection("Queues").document(queueId).update("numuser",users_list.size());
-        queue_size_view.setText(users_list.size());
-
     }
 
     public void readProfileData(){
-
 
         db.collection("Queues").document(queueId).collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
             // la lista que tenemos en firebase
@@ -85,6 +78,11 @@ public class EntityQueueActivity extends AppCompatActivity {
                     users_list.add(u);
                 }
                 adapter.notifyDataSetChanged();
+
+                //añado en el firebase el numero de usuarios que tiene cada cola
+                Integer usr_list_size = users_list.size();
+                db.collection("Queues").document(queueId).update("numuser",usr_list_size);
+                queue_size_view.setText(usr_list_size.toString());
             }
         });
 
