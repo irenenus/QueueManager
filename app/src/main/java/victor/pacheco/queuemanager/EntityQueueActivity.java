@@ -82,6 +82,11 @@ public class EntityQueueActivity extends AppCompatActivity {
                 //añado en el firebase el numero de usuarios que tiene cada cola
                 Integer usr_list_size = users_list.size();
                 db.collection("Queues").document(queueId).update("numuser",usr_list_size);
+                if(usr_list_size == 1){
+                    User u = users_list.get(0);
+                    db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
+                }
+
                 queue_size_view.setText(usr_list_size.toString());
             }
         });

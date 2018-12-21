@@ -1,6 +1,7 @@
 package victor.pacheco.queuemanager;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class EntityProfileActivity extends AppCompatActivity {
     private String current_user;
 
 
-    // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
+        // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -118,7 +119,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
                     // Añadimos la nueva cola a Firebase
 
-                    db.collection("Queues").add(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user));
+                    db.collection("Queues").document(queue_name).set(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user));
                 }
                 break;
             default:
