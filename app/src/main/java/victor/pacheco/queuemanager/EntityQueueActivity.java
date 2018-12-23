@@ -38,6 +38,8 @@ public class EntityQueueActivity extends AppCompatActivity {
     private RecyclerView entity_userlist_recycler;
     private EntityQueueActivity.Adapter adapter;
     private Button btn_next;
+    public boolean siguiente=false;
+    public Integer n=0;
     List<User> users_list;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -64,6 +66,16 @@ public class EntityQueueActivity extends AppCompatActivity {
 
         users_list = new ArrayList<>();
         readProfileData();
+        btn_next = findViewById(R.id.btn_next);
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                siguiente=true;
+                n++;
+                readProfileData();
+            }
+        });
     }
 
     public void readProfileData(){
@@ -83,8 +95,17 @@ public class EntityQueueActivity extends AppCompatActivity {
                 Integer usr_list_size = users_list.size();
                 db.collection("Queues").document(queueId).update("numuser",usr_list_size);
                 if(usr_list_size == 1){
-                    User u = users_list.get(0);
+                    User u = users_list.get(n);
                     db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
+                }
+                else{
+                    if (siguiente==true){
+                        User u = users_list.get(n);
+                        db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
+
+                        siguiente=false;
+
+                    }
                 }
 
                 queue_size_view.setText(usr_list_size.toString());
@@ -98,6 +119,9 @@ public class EntityQueueActivity extends AppCompatActivity {
         public ViewHolder(View itemView) {
             super(itemView);
             this.queue_name_view = itemView.findViewById(R.id.queue_name_view);
+/*            if() {
+                itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.colorPrimary));
+          } */
         }
     }
 
@@ -118,6 +142,7 @@ public class EntityQueueActivity extends AppCompatActivity {
             User user_item  = users_list.get(position);
             // Reciclamos el itemView
             holder.queue_name_view.setText(user_item.getUsr_id());
+
         }
 
         @Override
