@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class EntityQueueActivity extends AppCompatActivity {
 
     public void readProfileData(){
 
-        db.collection("Queues").document(queueId).collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
+        db.collection("Queues").document(queueId).collection("Users").orderBy("acces_time",Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
             // la lista que tenemos en firebase
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -97,12 +98,13 @@ public class EntityQueueActivity extends AppCompatActivity {
                 if(usr_list_size == 1){
                     User u = users_list.get(n);
                     db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
+                    db.collection("Queues").document(queueId).update("current_pos",1);
                 }
                 else{
                     if (siguiente==true){
                         User u = users_list.get(n);
                         db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
-
+                        db.collection("Queues").document(queueId).update("current_pos", n+1);
                         siguiente=false;
 
                     }

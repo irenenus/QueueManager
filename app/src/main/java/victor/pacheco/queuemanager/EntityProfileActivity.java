@@ -1,7 +1,6 @@
 package victor.pacheco.queuemanager;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,9 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +26,6 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     //Modelo
     List<Queue> queue_set_list;
-    List<Queue> support_queue_list;
     List<String> users_list;
 
     // Referencias a objetos de la pantalla
@@ -43,6 +37,7 @@ public class EntityProfileActivity extends AppCompatActivity {
     private Integer closing_hour;
     private Integer closing_min;
     private String current_user;
+    private Integer current_pos;
 
 
         // Para leer y escribir datos en la base de datos, necesitamos una instancia de FirebaseStore
@@ -110,7 +105,8 @@ public class EntityProfileActivity extends AppCompatActivity {
                     closing_hour = data.getIntExtra("close_h",-1);
                     closing_min = data.getIntExtra("close_m",-1);
                     current_user ="";
-                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0, current_user ) );
+                    current_pos = 0;
+                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0, current_user, current_pos) );
                     int pos = queue_set_list.size();
 
                     // Notificamos cambios en el Recycler
@@ -119,7 +115,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
                     // Añadimos la nueva cola a Firebase
 
-                    db.collection("Queues").document(queue_name).set(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user));
+                    db.collection("Queues").document(queue_name).set(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user, current_pos));
                 }
                 break;
             default:
