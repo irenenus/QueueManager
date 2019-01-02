@@ -34,7 +34,6 @@ public class EntityQueueActivity extends AppCompatActivity {
     private String queueId;
     private ImageView wt_icon;
     private ImageView list_size_icon;
-    private TextView timming_view;
     private TextView queue_size_view;
     private RecyclerView entity_userlist_recycler;
     private EntityQueueActivity.Adapter adapter;
@@ -53,7 +52,6 @@ public class EntityQueueActivity extends AppCompatActivity {
 
         wt_icon = findViewById(R.id.wt_icon);
         list_size_icon = findViewById(R.id.list_size_icon);
-        timming_view = findViewById(R.id.timming_view);
         queue_size_view = findViewById(R.id.queue_size_view);
         entity_userlist_recycler = findViewById(R.id.entity_userlist_recycler);
         entity_userlist_recycler.setLayoutManager(new LinearLayoutManager(this));
