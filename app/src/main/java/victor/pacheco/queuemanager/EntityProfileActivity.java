@@ -36,6 +36,7 @@ public class EntityProfileActivity extends AppCompatActivity {
     private Integer slot_time;
     private Integer closing_hour;
     private Integer closing_min;
+
     private String current_user;
     private Integer current_pos;
 
