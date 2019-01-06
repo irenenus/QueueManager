@@ -139,6 +139,7 @@ public class EntityQueueActivity extends AppCompatActivity {
             this.queue_name_view = itemView.findViewById(R.id.queue_name_view);
 /*            if() {
                 itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.colorPrimary));
+                en el usuario seleccionado se podria poner un icono al lado con un glide
           } */
         }
     }

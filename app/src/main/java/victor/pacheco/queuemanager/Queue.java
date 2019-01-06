@@ -6,10 +6,11 @@ public class Queue {
 
     private String current_user;
     private Integer slot_time, hour, min, numuser, current_pos;
+    private boolean checked;
 
     public Queue() {}
 
-    public Queue(String queue_name, Integer slot_time, Integer hour, Integer min, Integer numuser, String current_user, Integer current_pos) {
+    public Queue(String queue_name, Integer slot_time, Integer hour, Integer min, Integer numuser, String current_user, Integer current_pos, Boolean checked) {
         this.queue_name = queue_name;
         this.slot_time = slot_time;
         this.hour = hour;
@@ -17,6 +18,7 @@ public class Queue {
         this.numuser = numuser;
         this.current_user = current_user;
         this.current_pos = current_pos;
+        this.checked = checked;
     }
 
     public String getId() {
@@ -83,4 +85,11 @@ public class Queue {
         this.current_pos = current_pos;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 }

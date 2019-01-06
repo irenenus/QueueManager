@@ -1,11 +1,15 @@
 package victor.pacheco.queuemanager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -107,7 +111,7 @@ public class EntityProfileActivity extends AppCompatActivity {
                     closing_min = data.getIntExtra("close_m",-1);
                     current_user ="";
                     current_pos = 0;
-                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0, current_user, current_pos) );
+                    queue_set_list.add(new Queue(queue_name, slot_time,closing_hour,closing_min, 0, current_user, current_pos,false) );
                     int pos = queue_set_list.size();
 
                     // Notificamos cambios en el Recycler
@@ -116,7 +120,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
                     // Añadimos la nueva cola a Firebase
 
-                    db.collection("Queues").document(queue_name).set(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user, current_pos));
+                    db.collection("Queues").document(queue_name).set(new Queue(queue_name, slot_time,closing_hour,closing_min,0, current_user, current_pos, false));
                 }
                 break;
             default:
@@ -125,6 +129,40 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.queue_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_remove_selected:
+
+                int i = 0;
+                while (i < queue_set_list.size()) {
+                    if (queue_set_list.get(i).isChecked()) {
+                        db.collection("Queues").document(queue_set_list.get(i).getId()).delete();
+                        queue_set_list.remove(i);
+
+
+                    } else {
+                        i++;
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                break;
+        }
+        return true;
+    }
+
+    public void onLongClickItem(final int position) {
+        Queue queue = queue_set_list.get(position);
+        queue.setChecked(true);
+    }
 
 
     // El ViewHolder mantiene referencias a las partes del itemView que cambian cuando la reciclamos. Es una inner class de la clase ShoppingListActivity
@@ -144,6 +182,15 @@ public class EntityProfileActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), EntityQueueActivity.class);
                     intent.putExtra("queueId", queueId);
                     startActivity(intent);
+                }
+            });
+
+            queue_name_view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onLongClickItem(getAdapterPosition());
+
+                    return true;
                 }
             });
 
