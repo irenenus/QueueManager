@@ -1,5 +1,7 @@
 package victor.pacheco.queuemanager;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -123,6 +125,7 @@ public class EntityQueueActivity extends AppCompatActivity {
                         db.collection("Queues").document(queueId).update("current_pos", n+1);
                         siguiente=false;
 
+                        //notificar cambio al adapter para cambiar el usuario marcado en verde
                     }
                 }
 
@@ -137,10 +140,6 @@ public class EntityQueueActivity extends AppCompatActivity {
         public ViewHolder(View itemView) {
             super(itemView);
             this.queue_name_view = itemView.findViewById(R.id.queue_name_view);
-/*            if() {
-                itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.colorPrimary));
-                en el usuario seleccionado se podria poner un icono al lado con un glide
-          } */
         }
     }
 
@@ -161,6 +160,11 @@ public class EntityQueueActivity extends AppCompatActivity {
             User user_item  = users_list.get(position);
             // Reciclamos el itemView
             holder.queue_name_view.setText(user_item.getUsr_id());
+
+            if(user_item.getUsr_pos()==1){
+                // cambiar color usuario actual
+                // holder.queue_name_view.setTextColor(Color.GREEN);
+            }
 
         }
 

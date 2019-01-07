@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,32 +45,25 @@ public class CreateQueueActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final String queue_name = queue_name_edit.getText().toString();
-                db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
-                    // la lista que tenemos en firebase
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        Boolean colaencontrada=false;
-                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            Queue q = doc.toObject(Queue.class);
-                            q.setId(doc.getId());
-                            if(q.getId().equals(queue_name)){
-                                colaencontrada=true;
+                if(queue_name.equals("")) {
+                    Toast.makeText(CreateQueueActivity.this, "Please, fill the Queue name field", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    db.collection("Queues").whereEqualTo("queue_name", queue_name).get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    if (queryDocumentSnapshots.isEmpty()){
+                                        CreateQue();
+                                    }
+                                    else {
+                                        Toast.makeText(CreateQueueActivity.this, "The queueId already exists.", Toast.LENGTH_SHORT).show();
 
-                            }
+                                    }
+                                }
 
-
-                        }
-                        if(colaencontrada==true){
-                            Toast.makeText(CreateQueueActivity.this, "The queueId already exists.", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            CreateQue();
-                        }
-
-
-                    }});
-
-
+                            });
+                }
 
             }
         });
@@ -87,6 +81,8 @@ public class CreateQueueActivity extends AppCompatActivity {
         data.putExtra("slot", slot_time);
         data.putExtra("close_h", closing_hour);
         data.putExtra("close_m", closing_min);
+
+
 
         setResult(RESULT_OK, data);
         finish();
