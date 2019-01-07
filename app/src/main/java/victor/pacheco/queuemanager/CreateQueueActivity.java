@@ -43,31 +43,44 @@ public class CreateQueueActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final String queue_name = queue_name_edit.getText().toString();
-                db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
-                    // la lista que tenemos en firebase
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        Boolean colaencontrada=false;
-                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            Queue q = doc.toObject(Queue.class);
-                            q.setId(doc.getId());
-                            if(q.getId().equals(queue_name)){
-                                colaencontrada=true;
 
+                final String queue_name = queue_name_edit.getText().toString();
+                String closing_hour = closing_hour_edit.getText().toString();
+                String closing_min = closing_min_edit.getText().toString();
+                int h = Integer.parseInt(closing_hour);
+                int m = Integer.parseInt(closing_min);
+
+                if ((h > 24 || h < 0) || (m > 59 || m < 0)) {
+                    Toast.makeText(CreateQueueActivity.this, "The time is not correct", Toast.LENGTH_SHORT).show();
+
+                }
+
+                else{
+                    db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
+                        // la lista que tenemos en firebase
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            Boolean colaencontrada = false;
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Queue q = doc.toObject(Queue.class);
+                                q.setId(doc.getId());
+                                if (q.getId().equals(queue_name)) {
+                                    colaencontrada = true;
+
+                                }
+
+
+                            }
+                            if (colaencontrada == true) {
+                                Toast.makeText(CreateQueueActivity.this, "The queueId already exists.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                CreateQue();
                             }
 
 
                         }
-                        if(colaencontrada==true){
-                            Toast.makeText(CreateQueueActivity.this, "The queueId already exists.", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            CreateQue();
-                        }
-
-
-                    }});
+                    });
+                   }
 
 
 
