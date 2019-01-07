@@ -35,54 +35,23 @@
         android:id="@+id/queue_size_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="32dp"
         android:text="27"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/timming_view"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_next"
         app:layout_constraintEnd_toStartOf="@+id/list_size_icon"
-        app:layout_constraintStart_toEndOf="@+id/wt_icon" />
-
-    <TextView
-        android:id="@+id/timming_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:text="- 9'"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/wt_icon"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entity_userlist_recycler" />
-
-    <ImageView
-        android:id="@+id/wt_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/queue_size_view"
-        app:layout_constraintStart_toEndOf="@+id/timming_view"
-        app:layout_constraintTop_toBottomOf="@+id/entity_userlist_recycler"
-        app:layout_constraintVertical_bias="0.425"
-        app:srcCompat="@android:color/holo_blue_light" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/list_size_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/queue_size_view"
-        app:layout_constraintTop_toBottomOf="@+id/entity_userlist_recycler"
         app:srcCompat="@android:color/holo_green_dark" />
 
 </android.support.constraint.ConstraintLayout>

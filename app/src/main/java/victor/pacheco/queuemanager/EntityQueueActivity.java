@@ -39,7 +39,6 @@ import javax.annotation.Nullable;
 public class EntityQueueActivity extends AppCompatActivity {
 
     private String queueId;
-    private ImageView wt_icon;
     private ImageView list_size_icon;
     private TextView queue_size_view;
     private RecyclerView entity_userlist_recycler;
@@ -58,7 +57,6 @@ public class EntityQueueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entity_queue);
 
-        wt_icon = findViewById(R.id.wt_icon);
         list_size_icon = findViewById(R.id.list_size_icon);
         queue_size_view = findViewById(R.id.queue_size_view);
         entity_userlist_recycler = findViewById(R.id.entity_userlist_recycler);
@@ -67,8 +65,7 @@ public class EntityQueueActivity extends AppCompatActivity {
         entity_userlist_recycler.setAdapter(adapter);
 
         queueId = getIntent().getStringExtra("queueId");
-
-        Glide.with(this).load("file:///android_asset/wait-time-icon.png").into(wt_icon);
+        
         Glide.with(this).load("file:///android_asset/user-size-list.png").into(list_size_icon);
 
         users_list = new ArrayList<>();
