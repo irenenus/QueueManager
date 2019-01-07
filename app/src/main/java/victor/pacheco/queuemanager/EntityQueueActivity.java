@@ -119,10 +119,25 @@ public class EntityQueueActivity extends AppCompatActivity {
                 else{
                     if (siguiente==true){
                         User u = users_list.get(n);
-                        db.collection("Queues").document(queueId).update("current_user", u.getUsr_id() );
-                        db.collection("Queues").document(queueId).update("current_pos", n+1);
-                        siguiente=false;
 
+                        if(u.isState()==false) {
+                            db.collection("Queues").document(queueId).update("current_user", u.getUsr_id());
+                            db.collection("Queues").document(queueId).update("current_pos", n + 1);
+                            siguiente = false;
+
+                            }
+                         else{
+                            for(int i=n; i<users_list.size(); i++){
+                                User u2 = users_list.get(i);
+                                if(u2.isState()==false){
+                                    db.collection("Queues").document(queueId).update("current_user", u2.getUsr_id());
+                                    db.collection("Queues").document(queueId).update("current_pos", i+1);
+                                    siguiente = false;
+
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
 
