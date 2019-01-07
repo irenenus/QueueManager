@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QueueManager</string>
+    <string name="title_activity_create_queue">CreateQueueActivity</string>
+    <string name="cue_name_label">Nom de la queue</string>
+    <string name="closing_time_label">Heure limite</string>
+    <string name="slot_time_label">Créneau horaire</string>
+    <string name="min_label">minutes</string>
+    <string name="btn_create_queue">CRÉER QUEUE</string>
+    <string name="btn_new_queue">NOUVEAU QUEUE</string>
+    <string name="btn_next">APPEL SUIVANT</string>
+</resources>
