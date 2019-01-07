@@ -50,12 +50,12 @@ public class CreateQueueActivity extends AppCompatActivity {
                 int h = Integer.parseInt(closing_hour);
                 int m = Integer.parseInt(closing_min);
 
-                if ((h > 24 || h < 0) || (m > 59 || m < 0)) {
+                if ((h > 24 || h < 0) || (m > 60 || m < 0)) { //si se supera el tiempo de 23h o de 60 min se avisa
                     Toast.makeText(CreateQueueActivity.this, "The time is not correct", Toast.LENGTH_SHORT).show();
 
                 }
 
-                else{
+                else{ //mira si la cola ya existe
                     db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
                         // la lista que tenemos en firebase
                         @Override
@@ -74,7 +74,7 @@ public class CreateQueueActivity extends AppCompatActivity {
                             if (colaencontrada == true) {
                                 Toast.makeText(CreateQueueActivity.this, "The queueId already exists.", Toast.LENGTH_SHORT).show();
                             } else {
-                                CreateQue();
+                                CreateQue(); //se irá a la otra actividad EntityProfileActivity donde creará la cola
                             }
 
 

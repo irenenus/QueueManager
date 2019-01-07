@@ -69,7 +69,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     }
 
-    public void readProfileData(){
+    public void readProfileData(){ //actualiza el recylcer view con la lista de colas que hay en firebase
         db.collection("Queues").addSnapshotListener(new EventListener<QuerySnapshot>() { // actualiza la queue_set_list con
             // la lista que tenemos en firebase
             @Override
@@ -87,7 +87,7 @@ public class EntityProfileActivity extends AppCompatActivity {
     }
 
 
-    public void new_queue (View view) {
+    public void new_queue (View view) { // Botón new queue llama a la actividad CreateQueueActivity
 
         // Llamamos a CreateQueueActivity
         Intent intent = new Intent(this,CreateQueueActivity.class);
@@ -100,7 +100,7 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){ //creamos la cola en firebase y en nuestra lista de colas
 
         switch (requestCode){
             case 0:
@@ -132,13 +132,13 @@ public class EntityProfileActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { //menu para borrar
         getMenuInflater().inflate(R.menu.queue_list, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { //menu borra elementos seleccionados
         switch (item.getItemId()) {
             case R.id.option_remove_selected:
 
@@ -159,7 +159,7 @@ public class EntityProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onLongClickItem(final int position) {
+    public void onLongClickItem(final int position) { //on long click selecciona los que quieres borrar
         Queue queue = queue_set_list.get(position);
         queue.setChecked(true);
     }
