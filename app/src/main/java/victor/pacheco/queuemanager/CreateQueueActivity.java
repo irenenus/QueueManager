@@ -45,14 +45,26 @@ public class CreateQueueActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final String queue_name = queue_name_edit.getText().toString();
+                String closing_hour = closing_hour_edit.getText().toString();
+                String closing_min = closing_min_edit.getText().toString();
+
+                // miramos si el nombre de la cola está vació
                 if(queue_name.equals("")) {
                     Toast.makeText(CreateQueueActivity.this, "Please, fill the Queue name field", Toast.LENGTH_SHORT).show();
                 }
+                int h = Integer.parseInt(closing_hour);
+                int m = Integer.parseInt(closing_min);
+                if ((h > 24 || h < 0) || (m > 60 || m < 0)) { //si se supera el tiempo de 23h o de 60 min se avisa
+                    Toast.makeText(CreateQueueActivity.this, "The time is not correct", Toast.LENGTH_SHORT).show();
+
+                }
                 else{
+                    // Buscamos colas con ese mismo nombre
                     db.collection("Queues").whereEqualTo("queue_name", queue_name).get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    // si el documento está vacío, no habia ninguna cola con ese nombre
                                     if (queryDocumentSnapshots.isEmpty()){
                                         CreateQue();
                                     }
@@ -81,8 +93,6 @@ public class CreateQueueActivity extends AppCompatActivity {
         data.putExtra("slot", slot_time);
         data.putExtra("close_h", closing_hour);
         data.putExtra("close_m", closing_min);
-
-
 
         setResult(RESULT_OK, data);
         finish();
