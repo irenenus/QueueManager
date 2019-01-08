@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">QueueManager</string>
     <string name="title_activity_create_queue">CreateQueueActivity</string>
-    <string name="btn_next">AVISA AL SIGUIENTE</string>
+    <string name="btn_next">SIGUIENTE</string>
     <string name="btn_new_queue">NUEVA COLA</string>
     <string name="btn_create_queue">CREA COLA</string>
     <string name="min_label">minutos</string>

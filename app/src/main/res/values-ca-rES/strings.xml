@@ -8,5 +8,5 @@
     <string name="min_label">minuts</string>
     <string name="btn_create_queue">CREA CUA</string>
     <string name="btn_new_queue">NOVA CUA</string>
-    <string name="btn_next">AVISA AL SEGÜENT</string>
+    <string name="btn_next">SEGÜENT</string>
 </resources>

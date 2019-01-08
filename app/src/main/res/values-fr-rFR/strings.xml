@@ -8,5 +8,5 @@
     <string name="min_label">minutes</string>
     <string name="btn_create_queue">CRÉER QUEUE</string>
     <string name="btn_new_queue">NOUVEAU QUEUE</string>
-    <string name="btn_next">APPEL SUIVANT</string>
+    <string name="btn_next">SUIVANT</string>
 </resources>

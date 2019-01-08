@@ -65,7 +65,7 @@ public class EntityQueueActivity extends AppCompatActivity {
         entity_userlist_recycler.setAdapter(adapter);
 
         queueId = getIntent().getStringExtra("queueId");
-        
+
         Glide.with(this).load("file:///android_asset/user-size-list.png").into(list_size_icon);
 
         users_list = new ArrayList<>();
@@ -133,7 +133,7 @@ public class EntityQueueActivity extends AppCompatActivity {
                                     db.collection("Queues").document(queueId).update("current_user", u2.getUsr_id());
                                     db.collection("Queues").document(queueId).update("current_pos", i+1);
                                     siguiente = false;
-
+                                    adapter.notifyDataSetChanged();
                                     break;
                                 }
                             }
@@ -175,7 +175,9 @@ public class EntityQueueActivity extends AppCompatActivity {
 
             if(user_item.getUsr_pos()==1){
                 // cambiar color usuario actual
-                // holder.queue_name_view.setTextColor(Color.GREEN);
+                holder.queue_name_view.setTextColor(Color.GREEN);
+            } else {
+                holder.queue_name_view.setTextColor(Color.BLACK);
             }
 
         }
