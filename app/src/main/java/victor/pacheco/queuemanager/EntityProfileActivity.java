@@ -227,7 +227,7 @@ public class EntityProfileActivity extends AppCompatActivity {
             // Reciclamos el itemView
             holder.queue_name_view.setText(queue_item.getQueue_name());
             if(queue_item.isChecked()){
-                // cambiar color usuario actual
+                // cambiar color cola que quieres borrar
                 holder.queue_name_view.setTextColor(Color.RED);
             }
             else{
