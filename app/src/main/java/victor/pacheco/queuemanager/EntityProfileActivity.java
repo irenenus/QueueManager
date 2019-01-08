@@ -2,6 +2,7 @@ package victor.pacheco.queuemanager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import static android.graphics.Color.parseColor;
 
 public class EntityProfileActivity extends AppCompatActivity {
 
@@ -161,7 +164,8 @@ public class EntityProfileActivity extends AppCompatActivity {
 
     public void onLongClickItem(final int position) { //on long click selecciona los que quieres borrar
         Queue queue = queue_set_list.get(position);
-        queue.setChecked(true);
+        queue.toggleChecked();
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -170,8 +174,10 @@ public class EntityProfileActivity extends AppCompatActivity {
         private TextView queue_name_view;
 
         // constructor creado con alt return sobre ViewHolder, donde recibirá el itemView
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
+
+
             // Obtenemos las referencias a objetos dentro del itemView
             queue_name_view =itemView.findViewById((R.id.queue_name_view));
             queue_name_view.setOnClickListener(new View.OnClickListener() {
@@ -188,8 +194,9 @@ public class EntityProfileActivity extends AppCompatActivity {
             queue_name_view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    onLongClickItem(getAdapterPosition());
+                    int pos = getAdapterPosition();
 
+                    onLongClickItem(pos);
                     return true;
                 }
             });
@@ -206,8 +213,11 @@ public class EntityProfileActivity extends AppCompatActivity {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             // Creamos un item de la pantalla a partir del layout
             View itemView = getLayoutInflater().inflate(R.layout.item_view, parent, false);
+
             // Creamos y retornamos el ViewHolder asociado
             return new ViewHolder(itemView);
+
+
         }
 
         @Override
@@ -216,6 +226,15 @@ public class EntityProfileActivity extends AppCompatActivity {
             Queue queue_item  = queue_set_list.get(position);
             // Reciclamos el itemView
             holder.queue_name_view.setText(queue_item.getQueue_name());
+            if(queue_item.isChecked()){
+                // cambiar color usuario actual
+                holder.queue_name_view.setTextColor(Color.RED);
+            }
+            else{
+                holder.queue_name_view.setTextColor(Color.BLACK);
+
+            }
+
         }
 
         @Override
