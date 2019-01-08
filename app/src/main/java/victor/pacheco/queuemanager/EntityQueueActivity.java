@@ -65,7 +65,7 @@ public class EntityQueueActivity extends AppCompatActivity {
         entity_userlist_recycler.setAdapter(adapter);
 
         queueId = getIntent().getStringExtra("queueId");
-
+        
         Glide.with(this).load("file:///android_asset/user-size-list.png").into(list_size_icon);
 
         users_list = new ArrayList<>();
@@ -122,6 +122,7 @@ public class EntityQueueActivity extends AppCompatActivity {
                         if(u.isState()==false) { //si el usuario no está ausente se llama automáticamente al siguiente
                             db.collection("Queues").document(queueId).update("current_user", u.getUsr_id());
                             db.collection("Queues").document(queueId).update("current_pos", n + 1);
+
                             siguiente = false;
 
                         //notificar cambio al adapter para cambiar el usuario marcado en verde
@@ -133,7 +134,7 @@ public class EntityQueueActivity extends AppCompatActivity {
                                     db.collection("Queues").document(queueId).update("current_user", u2.getUsr_id());
                                     db.collection("Queues").document(queueId).update("current_pos", i+1);
                                     siguiente = false;
-                                    adapter.notifyDataSetChanged();
+
                                     break;
                                 }
                             }
@@ -142,6 +143,7 @@ public class EntityQueueActivity extends AppCompatActivity {
                 }
 
                 queue_size_view.setText(usr_list_size.toString());
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -167,18 +169,29 @@ public class EntityQueueActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             // Vamos al modelo y obtenemos el valor en la posicion que nos pasan
-            User user_item  = users_list.get(position);
+            final User user_item  = users_list.get(position);
             // Reciclamos el itemView
             holder.queue_name_view.setText(user_item.getUsr_id());
 
-            if(user_item.getUsr_pos()==1){
-                // cambiar color usuario actual
-                holder.queue_name_view.setTextColor(Color.GREEN);
-            } else {
-                holder.queue_name_view.setTextColor(Color.BLACK);
-            }
+            //Miramos cual es el usuario que está siendo atendido y lo remarcamos en color azul sinó será de color negro
+
+            db.collection("Queues").document(queueId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot doc) {
+                    Queue q =doc.toObject(Queue.class);
+
+                    if(q.getCurrent_pos()==user_item.getUsr_pos()){
+                        // cambiar color usuario actual
+                        holder.queue_name_view.setTextColor(Color.BLUE);
+                    }
+                    else{
+                        holder.queue_name_view.setTextColor(Color.BLACK);
+
+                    }
+                }
+            });
 
         }
 
